@@ -108,7 +108,7 @@
         },
         "potentialAction": {
             "@type": "SearchAction",
-            "target": "https://deep-design.netlify.app/?search={search_term_string}",
+            "target": "https://deep-design.netlify.app/search?q={search_term_string}",
             "query-input": "required name=search_term_string"
         }
     }
@@ -133,13 +133,36 @@
         // ========== CONFIG ==========
         window.API_BASE = 'https://smallbusinessgrantapplication.com/deep/deep';
 
-        var params = new URLSearchParams(window.location.search);
-        var page = params.get('page') || 'home';
-        var validPages = ['home', 'service', 'portfolio', 'contact', 'about', 'gallery'];
-        if (validPages.indexOf(page) === -1) page = 'home';
-
         var BASE = 'https://deep-design.netlify.app';
-        var PAGE_URL = BASE + '/?page=' + page;
+
+        var validPages = ['home', 'service', 'portfolio', 'contact', 'about', 'gallery'];
+
+        function getPageFromPath() {
+            var path = window.location.pathname;
+            // Strip project subfolder (e.g. /deepdesign/about -> about)
+            path = path.replace(/^\/deepdesign\/?/, '');
+            path = path.replace(/^\/+|\/+$/g, '');
+            if (!path || path === 'index.html') return 'home';
+            if (validPages.indexOf(path) !== -1) return path;
+            return null;
+        }
+
+        var page = getPageFromPath();
+        if (!page) {
+            // 404 — load the 404 page
+            try {
+                var res = await fetch('public/404.html');
+                var html = await res.text();
+                document.open();
+                document.write(html);
+                document.close();
+            } catch(e) {
+                document.body.innerHTML = '<p style="color:#fff;text-align:center;margin-top:100px;font-family:sans-serif;">Page not found.</p>';
+            }
+            return;
+        }
+
+        var PAGE_URL = page === 'home' ? BASE + '/' : BASE + '/' + page;
 
         var seo = {
             home: {
@@ -181,7 +204,7 @@
                     "breadcrumb": {
                         "@type": "BreadcrumbList",
                         "itemListElement": [
-                            { "@type": "ListItem", "position": 1, "name": "Home", "item": BASE + "/?page=home" },
+                            { "@type": "ListItem", "position": 1, "name": "Home", "item": BASE + "/" },
                             { "@type": "ListItem", "position": 2, "name": "Services", "item": PAGE_URL }
                         ]
                     }
@@ -204,7 +227,7 @@
                     "breadcrumb": {
                         "@type": "BreadcrumbList",
                         "itemListElement": [
-                            { "@type": "ListItem", "position": 1, "name": "Home", "item": BASE + "/?page=home" },
+                            { "@type": "ListItem", "position": 1, "name": "Home", "item": BASE + "/" },
                             { "@type": "ListItem", "position": 2, "name": "Portfolio", "item": PAGE_URL }
                         ]
                     }
@@ -227,7 +250,7 @@
                     "breadcrumb": {
                         "@type": "BreadcrumbList",
                         "itemListElement": [
-                            { "@type": "ListItem", "position": 1, "name": "Home", "item": BASE + "/?page=home" },
+                            { "@type": "ListItem", "position": 1, "name": "Home", "item": BASE + "/" },
                             { "@type": "ListItem", "position": 2, "name": "Contact", "item": PAGE_URL }
                         ]
                     }
@@ -250,7 +273,7 @@
                     "breadcrumb": {
                         "@type": "BreadcrumbList",
                         "itemListElement": [
-                            { "@type": "ListItem", "position": 1, "name": "Home", "item": BASE + "/?page=home" },
+                            { "@type": "ListItem", "position": 1, "name": "Home", "item": BASE + "/" },
                             { "@type": "ListItem", "position": 2, "name": "About", "item": PAGE_URL }
                         ]
                     }
@@ -273,7 +296,7 @@
                     "breadcrumb": {
                         "@type": "BreadcrumbList",
                         "itemListElement": [
-                            { "@type": "ListItem", "position": 1, "name": "Home", "item": BASE + "/?page=home" },
+                            { "@type": "ListItem", "position": 1, "name": "Home", "item": BASE + "/" },
                             { "@type": "ListItem", "position": 2, "name": "Gallery", "item": PAGE_URL }
                         ]
                     }
@@ -318,48 +341,12 @@
             document.head.appendChild(script);
         }
 
-        // ========== APPLY PAGE META ==========
-        document.title = s.title;
-        setMeta('name', 'title', s.title);
-        setMeta('name', 'description', s.description);
-        setMeta('name', 'keywords', s.keywords);
-
-        // Open Graph
-        setMeta('property', 'og:title', s.ogTitle);
-        setMeta('property', 'og:description', s.ogDesc);
-        setMeta('property', 'og:url', PAGE_URL);
-        setMeta('property', 'og:image', BASE + '/assets/imgs/og-image.png');
-        setMeta('property', 'og:image:alt', s.ogTitle);
-
-        // Twitter
-        setMeta('name', 'twitter:title', s.ogTitle);
-        setMeta('name', 'twitter:description', s.ogDesc);
-        setMeta('name', 'twitter:url', PAGE_URL);
-        setMeta('name', 'twitter:image', BASE + '/assets/imgs/og-image.png');
-        setMeta('name', 'twitter:image:alt', s.ogTitle);
-
-        // Canonical & JSON-LD
-        setCanonical(PAGE_URL);
-        setJsonLd(s.jsonLd);
-
-        // ========== LOAD PAGE CONTENT ==========
-        try {
-            var headerRes = await fetch('includes/header.html');
-            var headerHTML = await headerRes.text();
-            var pageRes = await fetch('public/' + page + '/index.html');
-            var pageHTML = await pageRes.text();
-            var footerRes = await fetch('includes/footer.html');
-            var footerHTML = await footerRes.text();
-
-            document.open();
-            document.write(headerHTML + pageHTML + footerHTML);
-            document.close();
-
-            // Re-apply meta tags after document.write (it replaces the head)
+        function applyMeta() {
             document.title = s.title;
             setMeta('name', 'title', s.title);
             setMeta('name', 'description', s.description);
             setMeta('name', 'keywords', s.keywords);
+
             setMeta('property', 'og:title', s.ogTitle);
             setMeta('property', 'og:description', s.ogDesc);
             setMeta('property', 'og:url', PAGE_URL);
@@ -368,6 +355,7 @@
             setMeta('property', 'og:site_name', 'Deep Design');
             setMeta('property', 'og:locale', 'en_US');
             setMeta('property', 'og:locale:alternate', 'ar_SA');
+
             setMeta('name', 'twitter:card', 'summary_large_image');
             setMeta('name', 'twitter:title', s.ogTitle);
             setMeta('name', 'twitter:description', s.ogDesc);
@@ -390,12 +378,82 @@
             setMeta('name', 'apple-mobile-web-app-title', 'Deep Design');
             setCanonical(PAGE_URL);
             setJsonLd(s.jsonLd);
-
-        } catch (err) {
-            var lw = document.getElementById('loaderWrapper');
-            if (lw) lw.style.display = 'none';
-            document.body.innerHTML = '<p style="color:#fff;text-align:center;margin-top:100px;font-family:sans-serif;">Page not found.</p>';
         }
+
+        // ========== LOAD PAGE CONTENT ==========
+        async function loadPage(targetPage) {
+            var p = targetPage || page;
+            var seoEntry = seo[p];
+            if (!seoEntry) return;
+
+            s = seoEntry;
+            PAGE_URL = p === 'home' ? BASE + '/' : BASE + '/' + p;
+            page = p;
+
+            try {
+                var headerRes = await fetch('includes/header.html');
+                var headerHTML = await headerRes.text();
+                var pageRes = await fetch('public/' + p + '/index.html');
+                var pageHTML = await pageRes.text();
+                var footerRes = await fetch('includes/footer.html');
+                var footerHTML = await footerRes.text();
+
+                document.open();
+                document.write(headerHTML + pageHTML + footerHTML);
+                document.close();
+
+                applyMeta();
+                window.scrollTo(0, 0);
+            } catch (err) {
+                var lw = document.getElementById('loaderWrapper');
+                if (lw) lw.style.display = 'none';
+                document.body.innerHTML = '<p style="color:#fff;text-align:center;margin-top:100px;font-family:sans-serif;">Page not found.</p>';
+            }
+        }
+
+        // Initial load
+        await loadPage();
+
+        var BASE_PATH = window.location.pathname.replace(/\/[^\/]*$/, '').replace(/\/deepdesign\/?$/, '');
+        var isSubfolder = window.location.pathname.indexOf('/deepdesign/') !== -1;
+
+        // ========== SPA NAVIGATION ==========
+        document.addEventListener('click', function(e) {
+            var link = e.target.closest('[data-nav]');
+            if (!link) return;
+
+            e.preventDefault();
+            var href = link.getAttribute('href');
+            if (!href) return;
+
+            var targetPage = href.replace(/^\/+|\/+$/g, '');
+            if (!targetPage || targetPage === 'index.html') targetPage = 'home';
+
+            if (validPages.indexOf(targetPage) === -1) return;
+            if (targetPage === page) return;
+
+            var urlPrefix = isSubfolder ? '/deepdesign' : '';
+            history.pushState({ page: targetPage }, '', urlPrefix + '/' + targetPage);
+            loadPage(targetPage);
+        });
+
+        window.addEventListener('popstate', function(e) {
+            var targetPage = getPageFromPath();
+            if (targetPage && targetPage !== page) {
+                loadPage(targetPage);
+            }
+        });
+
+        // Expose for script1.js
+        window.navigateTo = function(path) {
+            var p = path.replace(/^\/+|\/+$/g, '');
+            if (!p) p = 'home';
+            if (validPages.indexOf(p) === -1) return;
+            if (p === page) return;
+            var urlPrefix = isSubfolder ? '/deepdesign' : '';
+            history.pushState({ page: p }, '', urlPrefix + '/' + p);
+            loadPage(p);
+        };
     })();
     </script>
 </body>

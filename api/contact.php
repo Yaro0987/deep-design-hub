@@ -78,7 +78,7 @@ $userHtml = "
     "</div>
     <p style='font-size:15px;line-height:1.7;'>In the meantime, feel free to explore my work or check out the latest design tips on the blog.</p>
     <div style='margin-top:24px;text-align:center;'>
-        <a href='https://deep-design.netlify.app/?page=portfolio' style='display:inline-block;background:#000;color:#fff;padding:12px 28px;border-radius:50px;text-decoration:none;font-weight:600;font-size:14px;'>View My Work</a>
+        <a href='https://deep-design.netlify.app/portfolio' style='display:inline-block;background:#000;color:#fff;padding:12px 28px;border-radius:50px;text-decoration:none;font-weight:600;font-size:14px;'>View My Work</a>
     </div>
     <p style='font-size:15px;line-height:1.7;margin-top:24px;'>Best regards,<br><strong>Deep Design Hub</strong></p>
 </div>

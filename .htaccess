@@ -1,0 +1,7 @@
+RewriteEngine On
+RewriteBase /deepdesign/
+
+# Clean URLs — serve index.html for all routes
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.html [L]

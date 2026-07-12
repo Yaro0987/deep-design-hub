@@ -93,6 +93,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // ========== PAGE CONTENT ACTIONS ==========
+        if ($action === 'save_site_info') {
+            $socialJson = $_POST['social_links'] ?? '[]';
+            $contactEmail = trim($_POST['contact_email'] ?? '');
+            $contactLocation = trim($_POST['contact_location'] ?? '');
+            $contactResponse = trim($_POST['contact_response'] ?? '');
+            $whatsapp = trim($_POST['whatsapp_number'] ?? '');
+            setAdminSetting('social_links', $socialJson);
+            setAdminSetting('contact_email', $contactEmail);
+            setAdminSetting('contact_location', $contactLocation);
+            setAdminSetting('contact_response', $contactResponse);
+            setAdminSetting('whatsapp_number', $whatsapp);
+            $msg = 'Site info saved.'; $msgType = 'success';
+        }
         if ($action === 'save_page_content') {
             $pageSlug = $_POST['page_slug'] ?? '';
             if (!in_array($pageSlug, ['home','about','service','contact'])) {
@@ -234,7 +247,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'hero_title' => 'We Build<br><span class="highlight">Digital Experiences</span>',
                     'hero_subtitle' => 'Crafting modern, high-performance websites and applications for businesses that want to stand out.',
                     'hero_cta' => 'Start a Project',
-                    'hero_cta_link' => '?page=contact',
+                    'hero_cta_link' => '/contact',
                     'services_label' => 'What I Do',
                     'services_heading' => 'Services That <span class="highlight-dark">Drive Results</span>',
                     'services' => [
@@ -244,7 +257,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ['icon'=>'branding_watermark','title'=>'Brand Identity','desc'=>'Cohesive brand systems that stick.']
                     ],
                     'services_btn' => 'View All Services',
-                    'services_btn_link' => '?page=service',
+                    'services_btn_link' => '/service',
                     'about_label' => 'About Me',
                     'about_heading' => 'Developer & Designer <span class="highlight">with Purpose</span>',
                     'about_text' => "I don't just build websites \u2014 I craft digital experiences. Every project is a blend of clean code and bold design, tailored to make your brand stand out.",
@@ -257,9 +270,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'cta_heading' => 'Ready to Start Your Project?',
                     'cta_text' => "Let's turn your idea into something extraordinary. Get in touch and let's make it happen.",
                     'cta_btn1' => 'Get in Touch',
-                    'cta_btn1_link' => '?page=contact',
+                    'cta_btn1_link' => '/contact',
                     'cta_btn2' => 'See My Work',
-                    'cta_btn2_link' => '?page=portfolio'
+                    'cta_btn2_link' => '/portfolio'
                 ], JSON_UNESCAPED_SLASHES),
                 'about' => json_encode([
                     'story_label' => 'My Story',
@@ -875,6 +888,80 @@ select.form-input option{background:#111;color:#fff}
                 <div class="form-group"><label>Current Password (required to save)</label><input type="password" name="current_pass" class="form-input" placeholder="Enter current password" required></div>
                 <button type="submit" class="btn btn-primary">Save Credentials</button>
             </form>
+        </div>
+        <div class="card"><div class="card-header"><h2>Site Info & Social Links</h2><p style="color:#666;margin-top:4px;font-size:13px">Edit contact info and social media links shown on the site</p></div>
+            <?php
+            $socialLinks = getAdminSetting('social_links', json_encode([
+                ['label' => 'LinkedIn', 'url' => 'https://linkedin.com/in/', 'icon' => 'fab fa-linkedin'],
+                ['label' => 'Twitter', 'url' => 'https://x.com/', 'icon' => 'fab fa-x-twitter'],
+                ['label' => 'GitHub', 'url' => 'https://github.com/', 'icon' => 'fab fa-github'],
+                ['label' => 'Dribbble', 'url' => 'https://dribbble.com/', 'icon' => 'fab fa-dribbble'],
+                ['label' => 'Instagram', 'url' => 'https://instagram.com/', 'icon' => 'fab fa-instagram'],
+                ['label' => 'Behance', 'url' => 'https://behance.net/', 'icon' => 'fab fa-behance'],
+                ['label' => 'CodePen', 'url' => 'https://codepen.io/', 'icon' => 'fab fa-codepen'],
+                ['label' => 'Figma', 'url' => 'https://figma.com/', 'icon' => 'fab fa-figma'],
+            ]));
+            $socialArr = json_decode($socialLinks, true);
+            if (!is_array($socialArr)) $socialArr = [];
+            $contactEmail = getAdminSetting('contact_email', 'hello@deepdesign.studio');
+            $contactLocation = getAdminSetting('contact_location', 'Available for remote work worldwide');
+            $contactResponse = getAdminSetting('contact_response', 'I\'ll respond within 24 hours');
+            $whatsapp = getAdminSetting('whatsapp_number', '');
+            ?>
+            <form method="POST">
+                <input type="hidden" name="action" value="save_site_info">
+                <h3 style="font-size:14px;color:#888;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px">Contact Information</h3>
+                <div class="form-row">
+                    <div class="form-group"><label>Email Address</label><input type="email" name="contact_email" class="form-input" value="<?= htmlspecialchars($contactEmail) ?>" required></div>
+                    <div class="form-group"><label>Location / Tagline</label><input type="text" name="contact_location" class="form-input" value="<?= htmlspecialchars($contactLocation) ?>"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Response Time Text</label><input type="text" name="contact_response" class="form-input" value="<?= htmlspecialchars($contactResponse) ?>"></div>
+                    <div class="form-group"><label>WhatsApp Number (digits only, e.g. 923001234567)</label><input type="text" name="whatsapp_number" class="form-input" value="<?= htmlspecialchars($whatsapp) ?>" placeholder="Leave empty to hide WhatsApp button"></div>
+                </div>
+
+                <h3 style="font-size:14px;color:#888;margin:20px 0 12px;text-transform:uppercase;letter-spacing:1px">Social Links</h3>
+                <div id="social-links-list">
+                <?php foreach ($socialArr as $i => $s): ?>
+                    <div class="form-row" style="margin-bottom:6px" data-social-row="<?= $i ?>">
+                        <div class="form-group" style="flex:1.5"><label>Label</label><input type="text" name="social[<?= $i ?>][label]" class="form-input" value="<?= htmlspecialchars($s['label'] ?? '') ?>"></div>
+                        <div class="form-group" style="flex:2.5"><label>URL</label><input type="url" name="social[<?= $i ?>][url]" class="form-input" value="<?= htmlspecialchars($s['url'] ?? '') ?>"></div>
+                        <div class="form-group" style="flex:1.5"><label>Icon Class</label><input type="text" name="social[<?= $i ?>][icon]" class="form-input" value="<?= htmlspecialchars($s['icon'] ?? '') ?>"></div>
+                        <div class="form-group" style="flex:0;padding-top:22px"><button type="button" class="btn btn-ghost" style="padding:6px 10px;color:#f44" onclick="this.closest('[data-social-row]').remove()">✕</button></div>
+                    </div>
+                <?php endforeach; ?>
+                </div>
+                <input type="hidden" name="social_links" id="social_links_json">
+                <button type="button" class="btn btn-ghost" onclick="addSocialRow()" style="margin-bottom:16px">+ Add Social Link</button>
+                <br>
+                <button type="submit" class="btn btn-primary" onclick="serializeSocialLinks()">Save Site Info</button>
+            </form>
+            <script>
+            function addSocialRow() {
+                var list = document.getElementById('social-links-list');
+                var idx = list.querySelectorAll('[data-social-row]').length;
+                var div = document.createElement('div');
+                div.className = 'form-row';
+                div.style.marginBottom = '6px';
+                div.setAttribute('data-social-row', idx);
+                div.innerHTML = '<div class="form-group" style="flex:1.5"><label>Label</label><input type="text" name="social[' + idx + '][label]" class="form-input" placeholder="LinkedIn"></div>' +
+                    '<div class="form-group" style="flex:2.5"><label>URL</label><input type="url" name="social[' + idx + '][url]" class="form-input" placeholder="https://linkedin.com/in/"></div>' +
+                    '<div class="form-group" style="flex:1.5"><label>Icon Class</label><input type="text" name="social[' + idx + '][icon]" class="form-input" placeholder="fab fa-linkedin"></div>' +
+                    '<div class="form-group" style="flex:0;padding-top:22px"><button type="button" class="btn btn-ghost" style="padding:6px 10px;color:#f44" onclick="this.closest(\'[data-social-row]\').remove()">✕</button></div>';
+                list.appendChild(div);
+            }
+            function serializeSocialLinks() {
+                var rows = document.querySelectorAll('[data-social-row]');
+                var arr = [];
+                rows.forEach(function(r) {
+                    var label = r.querySelector('input[name$="[label]"]').value;
+                    var url = r.querySelector('input[name$="[url]"]').value;
+                    var icon = r.querySelector('input[name$="[icon]"]').value;
+                    if (label || url) arr.push({label: label, url: url, icon: icon});
+                });
+                document.getElementById('social_links_json').value = JSON.stringify(arr);
+            }
+            </script>
         </div>
         <div class="card"><div class="card-header"><h2>Diagnostics</h2></div>
             <div class="btn-group">
