@@ -112,6 +112,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $msg = 'Invalid page.'; $msgType = 'error';
             } else {
                 $content = [];
+                $content['meta'] = [
+                    'title' => trim($_POST['meta_title'] ?? ''),
+                    'description' => trim($_POST['meta_description'] ?? ''),
+                    'keywords' => trim($_POST['meta_keywords'] ?? ''),
+                    'og_title' => trim($_POST['meta_og_title'] ?? ''),
+                    'og_desc' => trim($_POST['meta_og_desc'] ?? ''),
+                ];
                 if ($pageSlug === 'home') {
                     $content['hero_title'] = $_POST['hero_title'] ?? '';
                     $content['hero_subtitle'] = $_POST['hero_subtitle'] ?? '';
@@ -1004,6 +1011,17 @@ select.form-input option{background:#111;color:#fff}
         <form method="POST" id="pageContentForm">
             <input type="hidden" name="action" value="save_page_content">
             <input type="hidden" name="page_slug" value="<?= $pageSlug ?>">
+
+            <div class="card"><div class="card-header"><h2>SEO / Meta Tags</h2><p style="color:#666;margin-top:4px;font-size:13px">Controls how this page appears in Google search and social media previews</p></div>
+                <?php $meta = $c['meta'] ?? []; ?>
+                <div class="form-group"><label>Page Title (shown in browser tab & Google)</label><input type="text" name="meta_title" class="form-input" value="<?= htmlspecialchars($meta['title']??'') ?>" placeholder="Page Name \u2014 Deep Design"></div>
+                <div class="form-group"><label>Meta Description (shown in Google results, 150-160 chars ideal)</label><textarea name="meta_description" class="form-input" rows="2" placeholder="Describe this page for search engines..."><?= htmlspecialchars($meta['description']??'') ?></textarea></div>
+                <div class="form-group"><label>Keywords (comma separated)</label><input type="text" name="meta_keywords" class="form-input" value="<?= htmlspecialchars($meta['keywords']??'') ?>" placeholder="keyword1, keyword2, keyword3"></div>
+                <div class="form-row">
+                    <div class="form-group"><label>OG Title (social media share title)</label><input type="text" name="meta_og_title" class="form-input" value="<?= htmlspecialchars($meta['og_title']??'') ?>"></div>
+                    <div class="form-group"><label>OG Description (social media share text)</label><textarea name="meta_og_desc" class="form-input" rows="2"><?= htmlspecialchars($meta['og_desc']??'') ?></textarea></div>
+                </div>
+            </div>
 
 <?php if ($pageSlug === 'home'): ?>
             <div class="card"><div class="card-header"><h2>Hero Section</h2></div>

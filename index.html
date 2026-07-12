@@ -389,6 +389,23 @@
             PAGE_URL = p === 'home' ? BASE + '/' : BASE + '/' + p;
             page = p;
 
+            // Fetch meta from API if available
+            try {
+                var apiBase = window.API_BASE || '';
+                if (apiBase) {
+                    var metaRes = await fetch(apiBase + '/page-content.php?page=' + p);
+                    var metaData = await metaRes.json();
+                    if (metaData.success && metaData.content && metaData.content.meta) {
+                        var m = metaData.content.meta;
+                        s.title = m.title || s.title;
+                        s.description = m.description || s.description;
+                        s.keywords = m.keywords || s.keywords;
+                        s.ogTitle = m.og_title || s.ogTitle;
+                        s.ogDesc = m.og_desc || s.ogDesc;
+                    }
+                }
+            } catch(e) {}
+
             try {
                 var headerRes = await fetch('includes/header.html');
                 var headerHTML = await headerRes.text();
