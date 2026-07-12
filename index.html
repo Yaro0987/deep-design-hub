@@ -418,6 +418,11 @@
                 document.write(headerHTML + pageHTML + footerHTML);
                 document.close();
 
+                // Re-inject script1.js — document.write() after parsing doesn't execute <script> tags
+                var s1 = document.createElement('script');
+                s1.src = 'assets/js/script1.js';
+                document.body.appendChild(s1);
+
                 applyMeta();
                 window.scrollTo(0, 0);
             } catch (err) {
