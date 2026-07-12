@@ -1,0 +1,130 @@
+{
+    "images": [
+        {
+            "id": 1,
+            "src": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80",
+            "title": "Web Development Project",
+            "category": "web",
+            "description": "Modern web application built with React"
+        },
+        {
+            "id": 2,
+            "src": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80",
+            "title": "Brand Identity Design",
+            "category": "branding",
+            "description": "Complete brand identity system"
+        },
+        {
+            "id": 3,
+            "src": "https://images.unsplash.com/photo-1561070791-36c11767b26a?w=800&q=80",
+            "title": "UI/UX Interface Design",
+            "category": "uiux",
+            "description": "Clean and intuitive mobile interface"
+        },
+        {
+            "id": 4,
+            "src": "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=800&q=80",
+            "title": "Graphic Design Poster",
+            "category": "graphic",
+            "description": "Bold poster design for event promotion"
+        },
+        {
+            "id": 5,
+            "src": "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=800&q=80",
+            "title": "Social Media Campaign",
+            "category": "graphic",
+            "description": "Visual content for social media marketing"
+        },
+        {
+            "id": 6,
+            "src": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+            "title": "Dashboard Interface",
+            "category": "uiux",
+            "description": "Analytics dashboard with data visualization"
+        },
+        {
+            "id": 7,
+            "src": "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&q=80",
+            "title": "Mobile App Design",
+            "category": "uiux",
+            "description": "Healthcare mobile app with booking system"
+        },
+        {
+            "id": 8,
+            "src": "https://images.unsplash.com/photo-1555421689-d68471e189f2?w=800&q=80",
+            "title": "Real Estate Platform",
+            "category": "web",
+            "description": "Full-stack property listing website"
+        },
+        {
+            "id": 9,
+            "src": "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=800&q=80",
+            "title": "Product Packaging",
+            "category": "branding",
+            "description": "Gourmet food brand packaging system"
+        },
+        {
+            "id": 10,
+            "src": "https://images.unsplash.com/photo-1545235617-9465d2a55698?w=800&q=80",
+            "title": "SaaS Landing Page",
+            "category": "web",
+            "description": "High-converting landing page for a SaaS product"
+        },
+        {
+            "id": 11,
+            "src": "https://images.unsplash.com/photo-1634942537034-2531766767d1?w=800&q=80",
+            "title": "Restaurant Branding",
+            "category": "branding",
+            "description": "Full brand identity for a modern restaurant"
+        },
+        {
+            "id": 12,
+            "src": "https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&q=80",
+            "title": "Web Application UI",
+            "category": "uiux",
+            "description": "Project management tool interface"
+        },
+        {
+            "id": 13,
+            "src": "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800&q=80",
+            "title": "Event Poster Series",
+            "category": "graphic",
+            "description": "Series of promotional posters for music events"
+        },
+        {
+            "id": 14,
+            "src": "https://images.unsplash.com/photo-1559028012-481c04fa702d?w=800&q=80",
+            "title": "Creative Typography",
+            "category": "graphic",
+            "description": "Experimental typography and lettering designs"
+        },
+        {
+            "id": 15,
+            "src": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&q=80",
+            "title": "Developer Portfolio",
+            "category": "web",
+            "description": "Personal portfolio website for a software engineer"
+        },
+        {
+            "id": 16,
+            "src": "https://images.unsplash.com/photo-1600132806608-0334f8f29228?w=800&q=80",
+            "title": "Brand Guidelines",
+            "category": "branding",
+            "description": "Comprehensive brand guidelines document"
+        },
+        {
+            "id": 17,
+            "src": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80",
+            "title": "Tech Startup Identity",
+            "category": "branding",
+            "description": "Brand identity for an AI-powered tech startup"
+        },
+        {
+            "id": 18,
+            "src": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80",
+            "title": "Code Editor Theme",
+            "category": "web",
+            "description": "Custom dark theme for a popular code editor"
+        }
+    ]
+}

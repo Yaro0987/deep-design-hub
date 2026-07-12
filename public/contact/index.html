@@ -1,0 +1,127 @@
+
+    <!-- Contact Toast -->
+    <div class="toast-success" id="contactToast">
+        <span class="material-symbols-rounded">check_circle</span>
+        Message sent successfully! I'll get back to you within 24 hours.
+    </div>
+
+    <div class="contact-section">
+        <div class="container">
+            <!-- Section Header -->
+            <div class="section-header anim-reveal">
+                <span class="section-label" id="contact-hero-label">
+                    <span class="material-symbols-rounded">mail</span> Get in Touch
+                </span>
+                <h1 id="contact-hero-heading">Let's Build Something <span class="highlight">Great Together</span></h1>
+                <p id="contact-hero-text">Have a project in mind? Whether it's web development, graphic design, UI/UX, or brand identity — I'd love to hear about it. I respond within 24 hours.</p>
+            </div>
+
+            <div class="contact-grid">
+                <!-- Contact Form -->
+                <div class="contact-form-wrapper anim-reveal">
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><span class="material-symbols-rounded">badge</span> Full Name</label>
+                                <input type="text" name="name" placeholder="John Doe" required>
+                            </div>
+                            <div class="form-group">
+                                <label><span class="material-symbols-rounded">alternate_email</span> Email Address</label>
+                                <input type="email" name="email" placeholder="john@example.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="material-symbols-rounded">category</span> Service Needed</label>
+                            <select name="subject" required>
+                                <option value="" disabled selected>Choose a service</option>
+                                <option value="Web Development">Web Development</option>
+                                <option value="Graphic Design">Graphic Design</option>
+                                <option value="UI/UX Design">UI/UX Design</option>
+                                <option value="Brand Identity">Brand Identity</option>
+                                <option value="Motion Graphics">Motion Graphics</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="material-symbols-rounded">description</span> Project Details</label>
+                            <textarea name="message" rows="6" placeholder="Tell me about your project, goals, timeline, and any inspiration..." required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            Send Message <span class="material-symbols-rounded">arrow_forward</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Contact Info Cards -->
+                <div class="contact-info anim-reveal" id="contact-info-cards">
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <span class="material-symbols-rounded">mail</span>
+                        </div>
+                        <div class="info-content">
+                            <h4>Email</h4>
+                            <a href="mailto:hello@deepdesign.netlify.app">hello@deepdesign.netlify.app</a>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <span class="material-symbols-rounded">schedule</span>
+                        </div>
+                        <div class="info-content">
+                            <h4>Response Time</h4>
+                            <p>Within 24 hours</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <span class="material-symbols-rounded">public</span>
+                        </div>
+                        <div class="info-content">
+                            <h4>Availability</h4>
+                            <p>Available worldwide for remote projects</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <span class="material-symbols-rounded">handshake</span>
+                        </div>
+                        <div class="info-content">
+                            <h4>Services</h4>
+                            <p>Web Dev, Design, UI/UX, Branding</p>
+                        </div>
+                    </div>
+
+                    <!-- Newsletter -->
+                    <div class="newsletter-card">
+                        <h4 id="contact-newsletter-title"><span class="material-symbols-rounded">newsmode</span> Stay Updated</h4>
+                        <p id="contact-newsletter-text">Get notified about new projects and design tips.</p>
+                        <form class="newsletter-form" id="newsletterForm">
+                            <input type="email" placeholder="Your email" required>
+                            <button type="submit">
+                                <span class="material-symbols-rounded">arrow_forward</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CONNECT SECTION (White) ========== -->
+    <div class="connect-section">
+        <div class="container">
+            <div class="connect-grid">
+                <div class="connect-text anim-reveal">
+                    <span class="connect-label" id="contact-social-label">Let's Connect</span>
+                    <h2 id="contact-social-heading">Follow Me on <span class="highlight-dark">Social Media</span></h2>
+                    <p id="contact-social-text">Stay updated with my latest work, design tips, and creative projects. Let's build a connection beyond this page.</p>
+                </div>
+                <div class="connect-social anim-reveal" id="contactSocialLinks">
+                    <!-- Populated by script1.js from data.json -->
+                </div>
+            </div>
+        </div>
+    </div>

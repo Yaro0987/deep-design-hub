@@ -1,0 +1,64 @@
+# ============================================================
+# Deep Design — Netlify _headers
+# https://deep-design.netlify.app
+# ============================================================
+
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+# ============================================================
+# HTML pages
+# ============================================================
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# ============================================================
+# Static assets — aggressive caching
+# ============================================================
+
+/assets/css/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/imgs/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/manifest.json
+  Cache-Control: public, max-age=604800
+
+# ============================================================
+# SEO files
+# ============================================================
+
+/sitemap.xml
+  Cache-Control: public, max-age=86400
+  Content-Type: application/xml
+
+/robots.txt
+  Cache-Control: public, max-age=86400
+
+# ============================================================
+# Fonts (proxied from Google Fonts CDN)
+# ============================================================
+
+https://fonts.googleapis.com/*
+  Cache-Control: public, max-age=604800
+
+https://fonts.gstatic.com/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# ============================================================
+# Bootstrap CDN
+# ============================================================
+
+https://cdn.jsdelivr.net/*
+  Cache-Control: public, max-age=604800

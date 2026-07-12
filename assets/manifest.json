@@ -1,0 +1,30 @@
+{
+    "name": "Deep Design",
+    "short_name": "Deep Design",
+    "description": "Personal portfolio of Deep Design — a developer and designer crafting modern websites, brand identities, and digital experiences.",
+    "start_url": "/?page=home",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#000000",
+    "orientation": "any",
+    "lang": "en",
+    "scope": "/",
+    "categories": ["portfolio", "design", "development"],
+    "icons": [
+        {
+            "src": "imgs/favicon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        },
+        {
+            "src": "imgs/favicon-32x32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "imgs/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        }
+    ]
+}

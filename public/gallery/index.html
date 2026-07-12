@@ -1,0 +1,72 @@
+
+    <!-- ========== GALLERY HERO ========== -->
+    <div class="gallery-hero">
+        <div class="container">
+            <span class="section-label anim-reveal">
+                <span class="material-symbols-rounded">photo_library</span> My Work
+            </span>
+            <h1 class="anim-reveal">Visual <span class="highlight">Gallery</span></h1>
+            <p class="anim-reveal">A curated collection of design work, projects, and creative experiments.</p>
+        </div>
+    </div>
+
+    <!-- ========== GALLERY FILTER ========== -->
+    <div class="gallery-filter-section">
+        <div class="container">
+            <div class="gallery-filters anim-reveal">
+                <button class="gallery-filter-btn active" data-filter="all">All</button>
+                <button class="gallery-filter-btn" data-filter="web">Web</button>
+                <button class="gallery-filter-btn" data-filter="graphic">Graphic</button>
+                <button class="gallery-filter-btn" data-filter="branding">Branding</button>
+                <button class="gallery-filter-btn" data-filter="uiux">UI/UX</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== GALLERY GRID ========== -->
+    <div class="gallery-grid-section">
+        <div class="container">
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Populated by script1.js from API -->
+            </div>
+            <div class="gallery-loading" id="galleryLoading">
+                <span class="material-symbols-rounded gallery-loading-icon">hourglass_empty</span>
+                <p>Loading gallery...</p>
+            </div>
+            <div class="gallery-empty" id="galleryEmpty" style="display:none;">
+                <span class="material-symbols-rounded">image_not_supported</span>
+                <p>No images found.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== GALLERY LIGHTBOX ========== -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose">
+            <span class="material-symbols-rounded">close</span>
+        </button>
+        <button class="lightbox-prev" id="lightboxPrev">
+            <span class="material-symbols-rounded">chevron_left</span>
+        </button>
+        <button class="lightbox-next" id="lightboxNext">
+            <span class="material-symbols-rounded">chevron_right</span>
+        </button>
+        <div class="lightbox-content">
+            <img id="lightboxImg" src="" alt="">
+            <div class="lightbox-info">
+                <h3 id="lightboxTitle"></h3>
+                <p id="lightboxDesc"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== GALLERY CTA ========== -->
+    <div class="gallery-cta">
+        <div class="container">
+            <div class="gallery-cta-card anim-reveal">
+                <h2>Like What You See?</h2>
+                <p>Let's create something amazing together. Get in touch to discuss your next project.</p>
+                <a href="?page=contact" class="service-cta-btn">Start a Project <span class="material-symbols-rounded">arrow_forward</span></a>
+            </div>
+        </div>
+    </div>

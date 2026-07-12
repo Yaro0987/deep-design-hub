@@ -1,0 +1,72 @@
+{
+    "social": [
+        {
+            "name": "Behance",
+            "url": "https://behance.net/deepdesign",
+            "icon": "behance"
+        },
+        {
+            "name": "Dribbble",
+            "url": "https://dribbble.com/deepdesign",
+            "icon": "dribbble"
+        },
+        {
+            "name": "Instagram",
+            "url": "https://instagram.com/deepdesign",
+            "icon": "instagram"
+        },
+        {
+            "name": "LinkedIn",
+            "url": "https://linkedin.com/in/deepdesign",
+            "icon": "linkedin"
+        },
+        {
+            "name": "GitHub",
+            "url": "https://github.com/deepdesign",
+            "icon": "github"
+        },
+        {
+            "name": "Twitter",
+            "url": "https://twitter.com/deepdesign",
+            "icon": "twitter"
+        }
+    ],
+    "contact": {
+        "email": "hello@deepdesign.netlify.app",
+        "phone": "",
+        "location": "Available Worldwide",
+        "responseTime": "Within 24 hours"
+    },
+    "nav": [
+        { "label": "Home", "page": "home", "icon": "home" },
+        { "label": "Services", "page": "service", "icon": "design_services" },
+        { "label": "Portfolio", "page": "portfolio", "icon": "dashboard" },
+        { "label": "Contact", "page": "contact", "icon": "mail" },
+        { "label": "About", "page": "about", "icon": "person" },
+        { "label": "Gallery", "page": "gallery", "icon": "photo_library" }
+    ],
+    "services": [
+        "Graphic Design",
+        "Web Development",
+        "UI/UX Design",
+        "Brand Identity",
+        "Motion Graphics",
+        "Other"
+    ],
+    "footer": {
+        "copyright": "2026 Deep Design",
+        "tagline": "A creative studio specializing in graphic design and web development. We craft digital experiences that elevate brands and drive results.",
+        "quickLinks": [
+            { "label": "Home", "page": "home" },
+            { "label": "Services", "page": "service" },
+            { "label": "Portfolio", "page": "portfolio" },
+            { "label": "About", "page": "about" }
+        ],
+        "serviceLinks": [
+            { "label": "Graphic Design", "page": "service" },
+            { "label": "Web Development", "page": "service" },
+            { "label": "UI/UX Design", "page": "service" },
+            { "label": "Branding", "page": "service" }
+        ]
+    }
+}

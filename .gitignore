@@ -1,0 +1,6 @@
+api/vendor/
+api/uploads/
+api/composer.lock
+*.log
+.DS_Store
+Thumbs.db
