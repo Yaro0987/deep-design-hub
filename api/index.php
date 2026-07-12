@@ -21,6 +21,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db->prepare("DELETE FROM contacts WHERE id = ?")->execute([(int)$_POST['id']]);
             $msg = 'Contact deleted.'; $msgType = 'success';
         }
+        if ($action === 'reply_contact') {
+            $replyId = (int)$_POST['id'];
+            $replyMsg = trim($_POST['reply_message'] ?? '');
+            $contactRow = $db->prepare("SELECT * FROM contacts WHERE id = ?");
+            $contactRow->execute([$replyId]);
+            $contact = $contactRow->fetch();
+            if ($contact && $replyMsg) {
+                $contactName = htmlspecialchars($contact['name']);
+                $contactEmail = $contact['email'];
+                $replyHtml = '<html><body style="font-family:\'Segoe UI\',Arial,sans-serif;color:#1a1a1a;max-width:600px;margin:0 auto;padding:20px;">';
+                $replyHtml .= '<div style="background:#000;padding:30px;border-radius:16px 16px 0 0;text-align:center;">';
+                $replyHtml .= '<img src="https://deep-design.netlify.app/assets/imgs/logo/white-deep.png" alt="Deep Design" style="height:40px;margin-bottom:8px;">';
+                $replyHtml .= '<p style="color:#888;font-size:12px;margin:0;letter-spacing:1px;text-transform:uppercase;">Reply to Your Message</p>';
+                $replyHtml .= '</div>';
+                $replyHtml .= '<div style="border:1px solid #e5e5e5;border-top:none;padding:32px;border-radius:0 0 16px 16px;">';
+                $replyHtml .= '<p style="font-size:15px;line-height:1.7;">Hi ' . $contactName . ',</p>';
+                $replyHtml .= '<div style="margin:20px 0;padding:16px;background:#f8f8f8;border-left:3px solid #000;border-radius:0 8px 8px 0;">';
+                $replyHtml .= '<p style="margin:0 0 4px;color:#999;font-size:11px;text-transform:uppercase;font-weight:600;">Your original message</p>';
+                $replyHtml .= '<p style="margin:0;font-size:13px;color:#666;">' . htmlspecialchars($contact['message']) . '</p>';
+                $replyHtml .= '</div>';
+                $replyHtml .= '<div style="margin:24px 0;padding:20px;background:#f0f0f0;border-radius:10px;">';
+                $replyHtml .= '<p style="margin:0 0 6px;color:#999;font-size:11px;text-transform:uppercase;font-weight:600;">Reply from Deep Design</p>';
+                $replyHtml .= '<p style="margin:0;font-size:15px;line-height:1.7;white-space:pre-wrap;">' . nl2br(htmlspecialchars($replyMsg)) . '</p>';
+                $replyHtml .= '</div>';
+                $replyHtml .= '<p style="font-size:15px;line-height:1.7;margin-top:24px;">Best regards,<br><strong>Deep Design</strong></p>';
+                $replyHtml .= '</div>';
+                $replyHtml .= '<p style="text-align:center;color:#bbb;font-size:11px;margin-top:20px;">deep-design.netlify.app</p>';
+                $replyHtml .= '</body></html>';
+                $sent = sendSMTP($contactEmail, 'Re: Your inquiry at Deep Design', $replyHtml);
+                // Mark as read
+                $db->prepare("UPDATE contacts SET is_read = 1 WHERE id = ?")->execute([$replyId]);
+                $msg = $sent ? 'Reply sent to ' . $contactEmail : 'Failed to send reply.'; $msgType = $sent ? 'success' : 'error';
+            } else {
+                $msg = 'Could not send reply.'; $msgType = 'error';
+            }
+        }
         if ($action === 'mark_read') {
             $db->prepare("UPDATE contacts SET is_read = 1 WHERE id = ?")->execute([(int)$_POST['id']]);
             $msg = 'Marked as read.'; $msgType = 'success';
@@ -338,7 +374,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'hero_heading' => "Let's Build Something <span class=\"highlight\">Great Together</span>",
                     'hero_text' => "Have a project in mind? Whether it's web development, graphic design, UI/UX, or brand identity \u2014 I'd love to hear about it. I respond within 24 hours.",
                     'info_cards' => [
-                        ['icon'=>'mail','title'=>'Email','value'=>'hello@deepdesign.netlify.app'],
+                        ['icon'=>'mail','title'=>'Email','value'=>'abubakarmusa0987@gmail.com'],
                         ['icon'=>'schedule','title'=>'Response Time','value'=>'Within 24 hours'],
                         ['icon'=>'public','title'=>'Availability','value'=>'Available worldwide for remote projects'],
                         ['icon'=>'handshake','title'=>'Services','value'=>'Web Dev, Design, UI/UX, Branding']
@@ -852,7 +888,15 @@ select.form-input option{background:#111;color:#fff}
             <div class="btn-group">
                 <?php if(!$r['is_read']): ?><form method="POST" style="display:inline"><input type="hidden" name="action" value="mark_read"><input type="hidden" name="id" value="<?= $r['id'] ?>"><button class="btn btn-success btn-sm">Mark Read</button></form><?php endif; ?>
                 <form method="POST" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="action" value="delete_contact"><input type="hidden" name="id" value="<?= $r['id'] ?>"><button class="btn btn-danger btn-sm">Delete</button></form>
-                <a href="mailto:<?= htmlspecialchars($r['email']) ?>" class="btn btn-ghost btn-sm">Reply</a>
+                <a href="mailto:<?= htmlspecialchars($r['email']) ?>?subject=Re: Your inquiry at Deep Design" class="btn btn-ghost btn-sm">Open in Mail</a>
+            </div>
+            <div class="reply-box" style="margin-top:14px;border-top:1px solid #222;padding-top:14px;">
+                <form method="POST">
+                    <input type="hidden" name="action" value="reply_contact">
+                    <input type="hidden" name="id" value="<?= $r['id'] ?>">
+                    <div class="form-group"><label>Quick Reply to <?= htmlspecialchars($r['name']) ?></label><textarea name="reply_message" class="form-input" rows="3" placeholder="Type your reply..." required></textarea></div>
+                    <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('Send reply to <?= htmlspecialchars($r['email']) ?>?')">Send Reply</button>
+                </form>
             </div>
         </div>
         <?php endforeach; ?>
@@ -910,7 +954,7 @@ select.form-input option{background:#111;color:#fff}
             ]));
             $socialArr = json_decode($socialLinks, true);
             if (!is_array($socialArr)) $socialArr = [];
-            $contactEmail = getAdminSetting('contact_email', 'hello@deepdesign.studio');
+            $contactEmail = getAdminSetting('contact_email', 'abubakarmusa0987@gmail.com');
             $contactLocation = getAdminSetting('contact_location', 'Available for remote work worldwide');
             $contactResponse = getAdminSetting('contact_response', 'I\'ll respond within 24 hours');
             $whatsapp = getAdminSetting('whatsapp_number', '');

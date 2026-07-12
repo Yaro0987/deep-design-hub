@@ -45,35 +45,44 @@ try {
     jsonResponse(false, 'Subscription failed', 500);
 }
 
-// Send welcome email to subscriber
-$welcomeHtml = "
-<html><body style='font-family:Arial,sans-serif;color:#333;max-width:600px;margin:0 auto;'>
-<div style='background:#000;color:#fff;padding:24px 32px;border-radius:12px 12px 0 0;'>
-    <h1 style='margin:0;font-size:22px;'>Welcome to Deep Design Hub!</h1>
-</div>
-<div style='border:1px solid #e5e5e5;border-top:none;padding:32px;border-radius:0 0 12px 12px;'>
-    <p style='font-size:15px;line-height:1.7;'>Hey there,</p>
-    <p style='font-size:15px;line-height:1.7;'>Thanks for subscribing to the Deep Design Hub newsletter! You'll be the first to know about new projects, design tips, and creative insights.</p>
-    <p style='font-size:15px;line-height:1.7;'>Stay creative,</p>
-    <p style='font-size:15px;font-weight:700;'>Deep Design Hub</p>
-    <hr style='border:none;border-top:1px solid #e5e5e5;margin:24px 0;'>
-    <p style='font-size:12px;color:#999;text-align:center;'>You received this because you subscribed at deep-design.netlify.app</p>
-</div>
-</body></html>";
+$siteUrl = 'https://deep-design.netlify.app';
+$logoUrl = $siteUrl . '/assets/imgs/logo/white-deep.png';
 
-sendSMTP($email, 'Welcome to Deep Design Hub!', $welcomeHtml);
+// Send welcome email to subscriber
+$welcomeHtml = '<html><body style="font-family:\'Segoe UI\',Arial,sans-serif;color:#1a1a1a;max-width:600px;margin:0 auto;padding:20px;">
+<div style="background:#000;padding:30px;border-radius:16px 16px 0 0;text-align:center;">
+    <img src="' . $logoUrl . '" alt="Deep Design" style="height:40px;margin-bottom:8px;">
+    <h1 style="margin:0;font-size:20px;color:#fff;font-weight:600;">Welcome to Deep Design!</h1>
+    <p style="color:#888;font-size:12px;margin:6px 0 0;text-transform:uppercase;letter-spacing:1px;">You\'re now part of the community</p>
+</div>
+<div style="border:1px solid #e5e5e5;border-top:none;padding:32px;border-radius:0 0 16px 16px;">
+    <p style="font-size:15px;line-height:1.7;">Hey there,</p>
+    <p style="font-size:15px;line-height:1.7;">Thanks for subscribing to the Deep Design newsletter! You\'ll be the first to know about new projects, design tips, and creative insights.</p>
+    <div style="text-align:center;margin:28px 0;">
+        <a href="' . $siteUrl . '/portfolio" style="display:inline-block;background:#000;color:#fff;padding:14px 32px;border-radius:50px;text-decoration:none;font-weight:600;font-size:14px;">Check Out My Work</a>
+    </div>
+    <p style="font-size:15px;line-height:1.7;">Stay creative,</p>
+    <p style="font-size:15px;font-weight:700;">Deep Design</p>
+    <hr style="border:none;border-top:1px solid #f0f0f0;margin:24px 0;">
+    <p style="font-size:11px;color:#aaa;text-align:center;">You received this because you subscribed at deep-design.netlify.app</p>
+</div>
+</body></html>';
+
+sendSMTP($email, 'Welcome to Deep Design!', $welcomeHtml);
 
 // Notify admin of new subscriber
-$adminHtml = "
-<html><body style='font-family:Arial,sans-serif;color:#333;max-width:600px;margin:0 auto;'>
-<div style='background:#000;color:#fff;padding:20px 28px;border-radius:12px 12px 0 0;'>
-    <h1 style='margin:0;font-size:18px;'>New Newsletter Subscriber</h1>
+$adminHtml = '<html><body style="font-family:\'Segoe UI\',Arial,sans-serif;color:#1a1a1a;max-width:600px;margin:0 auto;padding:20px;">
+<div style="background:#000;padding:24px;border-radius:16px 16px 0 0;text-align:center;">
+    <img src="' . $logoUrl . '" alt="Deep Design" style="height:32px;margin-bottom:6px;">
+    <h1 style="margin:0;font-size:18px;color:#fff;font-weight:600;">New Subscriber</h1>
 </div>
-<div style='border:1px solid #e5e5e5;border-top:none;padding:24px;border-radius:0 0 12px 12px;'>
-    <p style='font-size:14px;'><strong>Email:</strong> $email</p>
-    <p style='font-size:14px;'><strong>Date:</strong> " . date('F j, Y \a\t g:i A') . "</p>
+<div style="border:1px solid #e5e5e5;border-top:none;padding:24px;border-radius:0 0 16px 16px;">
+    <table style="width:100%;border-collapse:collapse;">
+        <tr><td style="padding:10px 0;color:#999;font-weight:600;font-size:13px;width:100px;">Email</td><td style="padding:10px 0;font-size:14px;">' . htmlspecialchars($email) . '</td></tr>
+        <tr><td style="padding:10px 0;color:#999;font-weight:600;font-size:13px;">Date</td><td style="padding:10px 0;font-size:14px;">' . date('F j, Y \a\t g:i A') . '</td></tr>
+    </table>
 </div>
-</body></html>";
+</body></html>';
 
 notifyAdmin('New Subscriber: ' . $email, $adminHtml);
 

@@ -66,6 +66,7 @@
 
             // ========== LOAD DATA.JSON ==========
             var apiBase = window.API_BASE || '';
+            var siteData = null;
             var dataUrl = apiBase ? apiBase.replace(/\/$/, '') + '/site-data.php' : 'assets/data.json';
             fetch(dataUrl)
                 .then(function(res) { return res.json(); })
@@ -114,6 +115,24 @@
                         if (footerEmail && data.contact.email) footerEmail.textContent = data.contact.email;
                         var footerLocation = document.getElementById('footerLocation');
                         if (footerLocation && data.contact.location) footerLocation.innerHTML = data.contact.location + '<br>Remote Projects Welcome';
+
+                        // WhatsApp float
+                        var waFloat = document.getElementById('whatsappFloat');
+                        if (waFloat && data.contact.whatsapp) {
+                            waFloat.href = 'https://wa.me/' + data.contact.whatsapp.replace(/[^0-9]/g, '');
+                            waFloat.style.display = 'flex';
+                        }
+
+                        // Contact page info cards — override from Settings
+                        var contactPageEmail = document.getElementById('contactPageEmail');
+                        if (contactPageEmail && data.contact.email) {
+                            contactPageEmail.textContent = data.contact.email;
+                            contactPageEmail.href = 'mailto:' + data.contact.email;
+                        }
+                        var contactPageResponse = document.getElementById('contactPageResponse');
+                        if (contactPageResponse && data.contact.responseTime) {
+                            contactPageResponse.textContent = data.contact.responseTime;
+                        }
                     }
 
                     // Populate footer copyright
@@ -606,7 +625,8 @@
                     .catch(function() {
                         fetch('api/images.json')
                             .then(function(res) { return res.json(); })
-                            .then(function(data) {
+                .then(function(data) {
+                    siteData = data;
                                 var images = data.images || [];
                                 currentGalleryImages = images;
                                 renderGallery(images);
@@ -734,6 +754,34 @@
                         else if (page === 'about') applyAboutContent(c);
                         else if (page === 'service') applyServiceContent(c);
                         else if (page === 'contact') applyContactContent(c);
+
+                        // After page content is applied, override contact info from site settings
+                        if (page === 'contact') {
+                            fetch(apiBase + '/site-data.php')
+                                .then(function(r) { return r.json(); })
+                                .then(function(sd) {
+                                    if (!sd || !sd.contact) return;
+                                    var cardsEl = document.getElementById('contact-info-cards');
+                                    if (!cardsEl) return;
+                                    cardsEl.querySelectorAll('.info-card').forEach(function(card) {
+                                        var icon = card.querySelector('.material-symbols-rounded');
+                                        if (!icon) return;
+                                        var type = icon.textContent.trim();
+                                        var valEl = card.querySelector('.info-content a') || card.querySelector('.info-content p');
+                                        if (type === 'mail' && sd.contact.email && valEl) {
+                                            valEl.textContent = sd.contact.email;
+                                            if (valEl.tagName === 'A') valEl.href = 'mailto:' + sd.contact.email;
+                                        }
+                                        if (type === 'schedule' && sd.contact.responseTime && valEl) {
+                                            valEl.textContent = sd.contact.responseTime;
+                                        }
+                                        if (type === 'public' && sd.contact.location && valEl) {
+                                            valEl.textContent = sd.contact.location;
+                                        }
+                                    });
+                                })
+                                .catch(function(){});
+                        }
                     })
                     .catch(function() {});
             })();
@@ -920,9 +968,16 @@
                         var nlCard = cardsEl.querySelector('.newsletter-card');
                         cardsEl.querySelectorAll('.info-card').forEach(function(el) { el.remove(); });
                         c.info_cards.forEach(function(cd) {
+                            var val = cd.value;
+                            // Override email and response time from site settings
+                            if (siteData && siteData.contact) {
+                                if (cd.icon === 'mail' && siteData.contact.email) val = siteData.contact.email;
+                                if (cd.icon === 'schedule' && siteData.contact.responseTime) val = siteData.contact.responseTime;
+                                if (cd.icon === 'public' && siteData.contact.location) val = siteData.contact.location;
+                            }
                             var div = document.createElement('div');
                             div.className = 'info-card';
-                            div.innerHTML = '<div class="info-icon"><span class="material-symbols-rounded">' + (cd.icon || '') + '</span></div><div class="info-content"><h4>' + (cd.title || '') + '</h4><p>' + (cd.value || '') + '</p></div>';
+                            div.innerHTML = '<div class="info-icon"><span class="material-symbols-rounded">' + (cd.icon || '') + '</span></div><div class="info-content"><h4>' + (cd.title || '') + '</h4>' + (cd.icon === 'mail' ? '<a href="mailto:' + val + '">' + val + '</a>' : '<p>' + val + '</p>') + '</div>';
                             cardsEl.insertBefore(div, nlCard);
                         });
                     }

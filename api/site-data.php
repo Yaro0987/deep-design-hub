@@ -13,7 +13,7 @@ try {
 
     // Contact info
     $contact = [
-        'email' => getAdminSetting('contact_email', 'hello@deepdesign.studio'),
+        'email' => getAdminSetting('contact_email', 'abubakarmusa0987@gmail.com'),
         'location' => getAdminSetting('contact_location', 'Available for remote work worldwide'),
         'responseTime' => getAdminSetting('contact_response', "I'll respond within 24 hours"),
         'whatsapp' => getAdminSetting('whatsapp_number', ''),

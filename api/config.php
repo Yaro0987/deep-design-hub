@@ -258,7 +258,7 @@ try {
                 'hero_heading' => "Let's Build Something <span class=\"highlight\">Great Together</span>",
                 'hero_text' => "Have a project in mind? I'd love to hear about it. I respond within 24 hours.",
                 'info_cards' => [
-                    ['icon'=>'mail','title'=>'Email','value'=>'hello@deepdesign.netlify.app'],
+                    ['icon'=>'mail','title'=>'Email','value'=>'abubakarmusa0987@gmail.com'],
                     ['icon'=>'schedule','title'=>'Response Time','value'=>'Within 24 hours'],
                     ['icon'=>'public','title'=>'Availability','value'=>'Available worldwide for remote projects'],
                     ['icon'=>'handshake','title'=>'Services','value'=>'Web Dev, Design, UI/UX, Branding']
@@ -315,7 +315,7 @@ try {
         $settings = [
             ['admin_user', 'admin'],
             ['admin_pass', 'deepdesign2026'],
-            ['contact_email', 'hello@deepdesign.studio'],
+            ['contact_email', 'abubakarmusa0987@gmail.com'],
             ['contact_location', 'Available for remote work worldwide'],
             ['contact_response', "I'll respond within 24 hours"],
             ['whatsapp_number', ''],
