@@ -725,9 +725,9 @@
                 gGrid.querySelectorAll('.anim-reveal').forEach(function(el) { observer.observe(el); });
             }
         }
-        setText('about-quote', c.philosophy_quote);
-        setText('about-quote-author', c.philosophy_author);
-        setText('about-quote-role', c.philosophy_role);
+        setText('about-philosophy-quote', c.philosophy_quote);
+        setText('about-philosophy-author', c.philosophy_author);
+        setText('about-philosophy-role', c.philosophy_role);
         setText('about-cta-heading', c.cta_heading);
         setText('about-cta-text', c.cta_text);
         setText('about-cta-btn1', c.cta_btn1);

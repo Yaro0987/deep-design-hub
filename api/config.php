@@ -2,7 +2,27 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-session_start();
+// ========== CORS HEADERS (must be before any output/session) ==========
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$allowed = ['https://deep-design.netlify.app', 'https://deepdesign.netlify.app'];
+if (in_array($origin, $allowed)) {
+    header('Access-Control-Allow-Origin: ' . $origin);
+} else {
+    header('Access-Control-Allow-Origin: *');
+}
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
+header('Access-Control-Allow-Credentials: true');
+
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+// ========== SESSION (only for admin) ==========
+if (session_status() === PHP_SESSION_NONE) {
+    @session_start();
+}
 
 // ========== DATABASE CONFIG ==========
 $hostname = gethostname();
@@ -32,16 +52,6 @@ define('SMTP_PASS', 'azcn nddg gwbt tkgr');
 define('SMTP_FROM_NAME', 'Deep Design Hub');
 define('SMTP_FROM_EMAIL', 'abubakarmusa0987@gmail.com');
 define('ADMIN_EMAIL', 'abubakarmusa0987@gmail.com');
-
-// ========== CORS HEADERS ==========
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
-
-if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit;
-}
 
 // ========== DATABASE CONNECTION ==========
 function getDB() {
