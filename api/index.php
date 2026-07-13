@@ -1248,6 +1248,8 @@ function openPortfolioModal(data){
     document.getElementById('portfolioAction').value='add_portfolio';
     document.getElementById('pfId').value='';
     document.getElementById('pfImagePreview').style.display='none';
+    document.getElementById('downloadFields').style.display='none';
+    document.getElementById('pfDownloadPreview').textContent='';
     m.classList.add('active');
 }
 function editPortfolio(p){
@@ -1259,6 +1261,7 @@ function editPortfolio(p){
     document.getElementById('pfTitle').value=p.title||'';
     document.getElementById('pfSlug').value=p.slug||'';
     document.getElementById('pfDesc').value=p.description||'';
+    document.getElementById('pfLongDesc').value=p.long_description||'';
     document.getElementById('pfImage').value=p.image||'';
     document.getElementById('pfCategory').value=p.category||'web';
     document.getElementById('pfSort').value=p.sort_order||0;
@@ -1266,9 +1269,18 @@ function editPortfolio(p){
     document.getElementById('pfUrl').value=p.project_url||'';
     document.getElementById('pfVisibleGroup').style.display='block';
     document.getElementById('pfVisible').checked=!!p.is_visible;
+    document.getElementById('pfDownloadable').checked=!!p.is_downloadable;
+    document.getElementById('pfPrice').value=p.price||'0';
+    document.getElementById('pfDownloadFile').value=p.download_file||'';
+    toggleDownloadFields();
+    if(p.download_file){document.getElementById('pfDownloadPreview').textContent='Current: '+p.download_file;}
     if(p.image){var pv=document.getElementById('pfImagePreview');pv.style.display='block';pv.querySelector('img').src=p.image;}
 }
 function closePortfolioModal(){document.getElementById('portfolioModal').classList.remove('active')}
+function toggleDownloadFields(){
+    var c=document.getElementById('pfDownloadable').checked;
+    document.getElementById('downloadFields').style.display=c?'block':'none';
+}
 
 /* ===== UPLOAD PORTFOLIO IMAGE ===== */
 function uploadProjImage(input){
@@ -1280,6 +1292,48 @@ function uploadProjImage(input){
         if(d.success){
             document.getElementById('pfImage').value=d.url;
             var pv=document.getElementById('pfImagePreview');pv.style.display='block';pv.querySelector('img').src=d.url;
+        } else {alert(d.message||'Upload failed');}
+    }).catch(function(){alert('Upload failed');});
+}
+
+/* ===== UPLOAD DOWNLOAD FILE ===== */
+function uploadDownloadFile(input){
+    if(!input.files[0])return;
+    var fd=new FormData();
+    fd.append('file',input.files[0]);
+    fd.append('action','upload_download_file');
+    fetch('index.php',{method:'POST',body:fd}).then(function(r){return r.json()}).then(function(d){
+        if(d.success){
+            document.getElementById('pfDownloadFile').value=d.url;
+            document.getElementById('pfDownloadPreview').textContent='Uploaded: '+d.name+' ('+d.url+')';
+        } else {alert(d.message||'Upload failed');}
+    }).catch(function(){alert('Upload failed');});
+}
+
+/* ===== UPLOAD HERO IMAGE ===== */
+function uploadHeroImage(input, fieldId){
+    if(!input.files[0])return;
+    var fd=new FormData();
+    fd.append('image',input.files[0]);
+    fd.append('action','upload_hero_image');
+    fetch('index.php',{method:'POST',body:fd}).then(function(r){return r.json()}).then(function(d){
+        if(d.success){
+            document.getElementById(fieldId).value=d.url;
+            var pv=document.getElementById(fieldId+'Preview');
+            if(pv){pv.style.display='block';pv.querySelector('img').src=d.url;}
+        } else {alert(d.message||'Upload failed');}
+    }).catch(function(){alert('Upload failed');});
+}
+
+/* ===== UPLOAD GENERIC IMAGE (for about story, etc.) ===== */
+function uploadGenericImage(input, fieldId){
+    if(!input.files[0])return;
+    var fd=new FormData();
+    fd.append('image',input.files[0]);
+    fd.append('action','upload_hero_image');
+    fetch('index.php',{method:'POST',body:fd}).then(function(r){return r.json()}).then(function(d){
+        if(d.success){
+            document.getElementById(fieldId).value=d.url;
         } else {alert(d.message||'Upload failed');}
     }).catch(function(){alert('Upload failed');});
 }
