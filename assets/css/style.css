@@ -662,15 +662,18 @@
             font-size: 0.9rem;
             z-index: 2000;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1.2);
-            display: flex;
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1.2), opacity 0.3s ease;
+            display: none;
             align-items: center;
             gap: 10px;
             letter-spacing: 0.3px;
+            opacity: 0;
         }
 
         .toast-success.show {
+            display: flex;
             transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
 
         /* ========== FOOTER ========== */
@@ -3046,6 +3049,10 @@
             border-radius: 16px;
             overflow: hidden;
             transition: all 0.35s ease;
+            cursor: pointer;
+            display: block;
+            text-decoration: none;
+            color: inherit;
         }
 
         .portfolio-card:hover {
@@ -3158,8 +3165,175 @@
             flex-wrap: wrap;
         }
 
+        /* Portfolio Card Link */
+        .portfolio-card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--pure-black);
+            margin-top: 8px;
+            padding: 6px 14px;
+            background-color: var(--pure-black);
+            color: var(--pure-white);
+            border-radius: 50px;
+            transition: all 0.2s ease;
+        }
+
+        .portfolio-card:hover .portfolio-card-link {
+            background-color: var(--gray-600);
+        }
+
+        .portfolio-card-link .material-symbols-rounded {
+            font-size: 1rem;
+            transition: transform 0.2s ease;
+        }
+
+        .portfolio-card:hover .portfolio-card-link .material-symbols-rounded {
+            transform: translateX(4px);
+        }
+
+        /* ========== PROJECT DETAIL PAGE ========== */
+        .project-hero {
+            background-color: var(--pure-black);
+            padding: calc(var(--header-height) + 40px) 0 50px;
+        }
+
+        .project-back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--gray-400);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 28px;
+            transition: color 0.2s ease;
+        }
+
+        .project-back-link:hover {
+            color: var(--pure-white);
+        }
+
+        .project-back-link .material-symbols-rounded {
+            font-size: 1.1rem;
+        }
+
+        .project-hero-content {
+            max-width: 720px;
+        }
+
+        .project-hero-content .section-label {
+            color: var(--gray-400);
+        }
+
+        .project-hero-content h1 {
+            font-size: 44px;
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            color: var(--pure-white);
+            margin-bottom: 16px;
+        }
+
+        .project-hero-desc {
+            font-size: 17px;
+            color: var(--gray-400);
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+
+        .project-tag {
+            padding: 6px 16px;
+            background-color: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--gray-300);
+        }
+
+        .project-main-image-section {
+            background-color: var(--pure-black);
+            padding: 0 0 80px;
+        }
+
+        .project-main-image {
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+            background-color: var(--gray-100);
+        }
+
+        .project-main-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .project-gallery-section {
+            background-color: var(--gray-100);
+            padding: 80px 0;
+        }
+
+        .project-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .project-gallery-grid .gallery-item {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 4/3;
+            background-color: var(--pure-white);
+        }
+
+        .project-gallery-grid .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .project-gallery-grid .gallery-item:hover img {
+            transform: scale(1.08);
+        }
+
+        .project-gallery-grid .gallery-item .gallery-overlay {
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .project-gallery-grid .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .lightbox-caption {
+            color: var(--gray-400);
+            font-size: 0.9rem;
+            margin-top: 16px;
+            text-align: center;
+        }
+
         @media (max-width: 992px) {
             .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .project-hero-content h1 { font-size: 32px; letter-spacing: -1px; }
+            .project-hero-desc { font-size: 15px; }
+            .project-gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
         }
 
         @media (max-width: 576px) {
@@ -3174,4 +3348,8 @@
             .portfolio-cta-card { padding: 40px 24px; }
             .portfolio-cta-card h2 { font-size: 26px; }
             .portfolio-cta-buttons { flex-direction: column; align-items: center; }
+            .project-hero-content h1 { font-size: 28px; }
+            .project-gallery-grid { grid-template-columns: 1fr; gap: 12px; }
+            .project-main-image-section { padding: 0 0 50px; }
+            .project-gallery-section { padding: 50px 0; }
         }

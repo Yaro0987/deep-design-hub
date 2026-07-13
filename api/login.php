@@ -28,7 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deep Design — Admin Login</title>
+<title>Deep Design Hubs — Admin Login</title>
+<link rel="icon" type="image/png" href="https://deep-design.netlify.app/assets/imgs/logo/favicon.png">
+<link rel="shortcut icon" href="https://deep-design.netlify.app/assets/imgs/logo/favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://deep-design.netlify.app/assets/imgs/logo/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -57,7 +60,7 @@ body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#e5e5e5;min-height:
         <div class="logo-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
         </div>
-        <h1>Deep Design</h1>
+        <h1>Deep Design Hubs</h1>
         <p>Admin Panel</p>
     </div>
 

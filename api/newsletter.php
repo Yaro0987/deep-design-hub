@@ -51,29 +51,29 @@ $logoUrl = $siteUrl . '/assets/imgs/logo/white-deep.png';
 // Send welcome email to subscriber
 $welcomeHtml = '<html><body style="font-family:\'Segoe UI\',Arial,sans-serif;color:#1a1a1a;max-width:600px;margin:0 auto;padding:20px;">
 <div style="background:#000;padding:30px;border-radius:16px 16px 0 0;text-align:center;">
-    <img src="' . $logoUrl . '" alt="Deep Design" style="height:40px;margin-bottom:8px;">
-    <h1 style="margin:0;font-size:20px;color:#fff;font-weight:600;">Welcome to Deep Design!</h1>
+    <img src="' . $logoUrl . '" alt="Deep Design Hubs" style="height:40px;margin-bottom:8px;">
+    <h1 style="margin:0;font-size:20px;color:#fff;font-weight:600;">Welcome to Deep Design Hubs!</h1>
     <p style="color:#888;font-size:12px;margin:6px 0 0;text-transform:uppercase;letter-spacing:1px;">You\'re now part of the community</p>
 </div>
 <div style="border:1px solid #e5e5e5;border-top:none;padding:32px;border-radius:0 0 16px 16px;">
     <p style="font-size:15px;line-height:1.7;">Hey there,</p>
-    <p style="font-size:15px;line-height:1.7;">Thanks for subscribing to the Deep Design newsletter! You\'ll be the first to know about new projects, design tips, and creative insights.</p>
+    <p style="font-size:15px;line-height:1.7;">Thanks for subscribing to the Deep Design Hubs newsletter! You\'ll be the first to know about new projects, design tips, and creative insights.</p>
     <div style="text-align:center;margin:28px 0;">
         <a href="' . $siteUrl . '/portfolio" style="display:inline-block;background:#000;color:#fff;padding:14px 32px;border-radius:50px;text-decoration:none;font-weight:600;font-size:14px;">Check Out My Work</a>
     </div>
     <p style="font-size:15px;line-height:1.7;">Stay creative,</p>
-    <p style="font-size:15px;font-weight:700;">Deep Design</p>
+    <p style="font-size:15px;font-weight:700;">Deep Design Hubs</p>
     <hr style="border:none;border-top:1px solid #f0f0f0;margin:24px 0;">
     <p style="font-size:11px;color:#aaa;text-align:center;">You received this because you subscribed at deep-design.netlify.app</p>
 </div>
 </body></html>';
 
-sendSMTP($email, 'Welcome to Deep Design!', $welcomeHtml);
+sendSMTP($email, 'Welcome to Deep Design Hubs!', $welcomeHtml);
 
 // Notify admin of new subscriber
 $adminHtml = '<html><body style="font-family:\'Segoe UI\',Arial,sans-serif;color:#1a1a1a;max-width:600px;margin:0 auto;padding:20px;">
 <div style="background:#000;padding:24px;border-radius:16px 16px 0 0;text-align:center;">
-    <img src="' . $logoUrl . '" alt="Deep Design" style="height:32px;margin-bottom:6px;">
+    <img src="' . $logoUrl . '" alt="Deep Design Hubs" style="height:32px;margin-bottom:6px;">
     <h1 style="margin:0;font-size:18px;color:#fff;font-weight:600;">New Subscriber</h1>
 </div>
 <div style="border:1px solid #e5e5e5;border-top:none;padding:24px;border-radius:0 0 16px 16px;">

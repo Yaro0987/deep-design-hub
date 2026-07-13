@@ -1,4 +1,4 @@
-# Deep Design — robots.txt
+# Deep Design Hubs — robots.txt
 # https://deep-design.netlify.app
 
 User-agent: *

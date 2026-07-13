@@ -727,11 +727,13 @@
                     var categoryLabels = { web: 'Web Dev', branding: 'Branding', uiux: 'UI/UX', graphic: 'Graphic' };
                     portfolioGrid.innerHTML = '';
                     projects.forEach(function(p) {
-                        var card = document.createElement('div');
-                        card.className = 'portfolio-card anim-reveal';
-                        card.setAttribute('data-category', p.category || '');
+                        var slug = p.slug || (p.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
                         var tags = (p.tags || []).map(function(t) { return '<span>' + t + '</span>'; }).join('');
                         var resolvedImg = resolveImageUrl(p.image);
+                        var card = document.createElement('a');
+                        card.href = slug ? '/portfolio/' + slug : '#';
+                        card.className = 'portfolio-card anim-reveal';
+                        card.setAttribute('data-category', p.category || '');
                         card.innerHTML =
                             '<div class="portfolio-card-image">' +
                                 '<img src="' + resolvedImg + '" alt="' + (p.title || '') + '" loading="lazy">' +
@@ -741,11 +743,19 @@
                                 '<h3>' + (p.title || '') + '</h3>' +
                                 '<p>' + (p.description || '') + '</p>' +
                                 '<div class="portfolio-card-tags">' + tags + '</div>' +
+                                '<div class="portfolio-card-link"><span class="material-symbols-rounded">arrow_forward</span> View Project</div>' +
                             '</div>';
-                        if (p.project_url) {
-                            card.style.cursor = 'pointer';
-                            card.addEventListener('click', function() { window.open(p.project_url, '_blank'); });
-                        }
+                        card.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            if (slug) {
+                                var url = '/portfolio/' + slug;
+                                if (typeof window.navigateTo === 'function') {
+                                    window.navigateTo(url);
+                                } else {
+                                    window.location.href = url;
+                                }
+                            }
+                        });
                         portfolioGrid.appendChild(card);
                     });
                     if (portfolioLoading) portfolioLoading.style.display = 'none';
@@ -1025,6 +1035,182 @@
                 setText('contact-social-label', c.social_label);
                 setHTML('contact-social-heading', c.social_heading);
                 setText('contact-social-text', c.social_text);
+            }
+
+            // ========== PROJECT DETAIL PAGE ==========
+            var projectTitleEl = document.getElementById('projectTitle');
+            if (projectTitleEl) {
+                var ppPath = window.location.pathname.replace(/^\/deepdesign\/?/, '').replace(/^\/+|\/+$/g, '');
+                var ppParts = ppPath.split('/');
+                var ppSlug = ppParts.length > 1 ? ppParts[ppParts.length - 1] : '';
+                var ppApiBase = window.API_BASE || '';
+                if (ppApiBase && ppSlug) {
+                    fetch(ppApiBase + '/portfolio.php?slug=' + encodeURIComponent(ppSlug))
+                        .then(function(r) { return r.json(); })
+                        .then(function(data) {
+                            if (!data.success || !data.project) {
+                                document.body.innerHTML = '<p style="color:#fff;text-align:center;margin-top:100px;font-family:sans-serif;">Project not found.</p>';
+                                return;
+                            }
+                            var pp = data.project;
+                            var ppBase = 'https://deep-design.netlify.app';
+
+                            function ppResolveImg(src) {
+                                if (!src) return '';
+                                if (src.indexOf('http') === 0 || src.indexOf('data:') === 0) return src;
+                                return ppApiBase + '/' + src;
+                            }
+
+                            var ppCatLabels = { web: 'Web Development', branding: 'Branding', uiux: 'UI/UX Design', graphic: 'Graphic Design' };
+
+                            document.title = pp.seo.title;
+
+                            function ppSetMeta(attr, key, content) {
+                                var el = document.querySelector('meta[' + attr + '="' + key + '"]');
+                                if (el) { el.setAttribute('content', content); }
+                                else {
+                                    el = document.createElement('meta');
+                                    el.setAttribute(attr, key);
+                                    el.setAttribute('content', content);
+                                    document.head.appendChild(el);
+                                }
+                            }
+                            var ppUrl = ppBase + '/portfolio/' + pp.slug;
+                            ppSetMeta('name', 'title', pp.seo.title);
+                            ppSetMeta('name', 'description', pp.seo.description);
+                            ppSetMeta('name', 'keywords', pp.seo.keywords);
+                            ppSetMeta('property', 'og:title', pp.seo.title);
+                            ppSetMeta('property', 'og:description', pp.seo.description);
+                            ppSetMeta('property', 'og:url', ppUrl);
+                            ppSetMeta('property', 'og:image', ppResolveImg(pp.image));
+                            ppSetMeta('property', 'og:image:alt', pp.title + ' — Deep Design Hubs');
+                            ppSetMeta('name', 'twitter:title', pp.seo.title);
+                            ppSetMeta('name', 'twitter:description', pp.seo.description);
+                            ppSetMeta('name', 'twitter:image', ppResolveImg(pp.image));
+                            ppSetMeta('name', 'twitter:image:alt', pp.title + ' — Deep Design Hubs');
+
+                            var ppCanonical = document.querySelector('link[rel="canonical"]');
+                            if (ppCanonical) ppCanonical.setAttribute('href', ppUrl);
+                            else {
+                                ppCanonical = document.createElement('link');
+                                ppCanonical.setAttribute('rel', 'canonical');
+                                ppCanonical.setAttribute('href', ppUrl);
+                                document.head.appendChild(ppCanonical);
+                            }
+
+                            var ppLd = document.createElement('script');
+                            ppLd.type = 'application/ld+json';
+                            ppLd.textContent = JSON.stringify({
+                                "@context": "https://schema.org",
+                                "@type": "CreativeWork",
+                                "name": pp.title,
+                                "url": ppUrl,
+                                "description": pp.description,
+                                "image": ppResolveImg(pp.image),
+                                "author": { "@type": "Organization", "name": "Deep Design Hubs", "url": ppBase },
+                                "isPartOf": { "@type": "WebSite", "name": "Deep Design Hubs", "url": ppBase },
+                                "keywords": pp.seo.keywords
+                            });
+                            document.head.appendChild(ppLd);
+
+                            var catEl = document.getElementById('projectCategory');
+                            if (catEl) catEl.innerHTML = '<span class="material-symbols-rounded">folder</span> ' + (ppCatLabels[pp.category] || pp.category || 'Project');
+                            projectTitleEl.textContent = pp.title;
+                            var descEl = document.getElementById('projectDesc');
+                            if (descEl) descEl.textContent = pp.description;
+                            var mainImg = document.getElementById('projectMainImage');
+                            if (mainImg) { mainImg.src = ppResolveImg(pp.image); mainImg.alt = pp.title; }
+
+                            var tagsEl = document.getElementById('projectTags');
+                            if (tagsEl && pp.tags && pp.tags.length) {
+                                pp.tags.forEach(function(tag) {
+                                    var span = document.createElement('span');
+                                    span.className = 'project-tag';
+                                    span.textContent = tag;
+                                    tagsEl.appendChild(span);
+                                });
+                            }
+
+                            if (pp.project_url) {
+                                var visitBtn = document.getElementById('projectVisitBtn');
+                                if (visitBtn) { visitBtn.href = pp.project_url; visitBtn.style.display = 'inline-flex'; }
+                            }
+
+                            var galleryImages = pp.gallery_images || [];
+                            var gallerySection = document.getElementById('projectGallerySection');
+                            var galleryGrid = document.getElementById('projectGalleryGrid');
+                            if (galleryImages.length > 0 && galleryGrid) {
+                                gallerySection.style.display = '';
+                                var currentIdx = 0;
+                                galleryImages.forEach(function(img, index) {
+                                    var item = document.createElement('div');
+                                    item.className = 'gallery-item anim-reveal';
+                                    item.innerHTML =
+                                        '<img src="' + ppResolveImg(img.src) + '" alt="' + (img.caption || pp.title) + '" loading="lazy">' +
+                                        '<div class="gallery-overlay">' +
+                                            '<span class="gallery-overlay-title">' + (img.caption || '') + '</span>' +
+                                            '<span class="gallery-overlay-icon"><span class="material-symbols-rounded">open_in_full</span></span>' +
+                                        '</div>';
+                                    item.addEventListener('click', function() {
+                                        currentIdx = index;
+                                        var lb = document.getElementById('projectLightbox');
+                                        var lbImg = document.getElementById('projectLightboxImg');
+                                        var lbCap = document.getElementById('projectLightboxCaption');
+                                        if (lbImg) { lbImg.src = ppResolveImg(galleryImages[currentIdx].src); lbImg.alt = galleryImages[currentIdx].caption || pp.title; }
+                                        if (lbCap) lbCap.textContent = galleryImages[currentIdx].caption || '';
+                                        if (lb) { lb.classList.add('active'); document.body.style.overflow = 'hidden'; }
+                                    });
+                                    galleryGrid.appendChild(item);
+                                });
+
+                                var ppLightbox = document.getElementById('projectLightbox');
+                                var ppLbImg = document.getElementById('projectLightboxImg');
+                                var ppLbCap = document.getElementById('projectLightboxCaption');
+
+                                function ppUpdateLb() {
+                                    var img = galleryImages[currentIdx];
+                                    if (!img) return;
+                                    if (ppLbImg) { ppLbImg.src = ppResolveImg(img.src); ppLbImg.alt = img.caption || pp.title; }
+                                    if (ppLbCap) ppLbCap.textContent = img.caption || '';
+                                }
+                                function ppCloseLb() {
+                                    if (ppLightbox) { ppLightbox.classList.remove('active'); document.body.style.overflow = ''; }
+                                }
+
+                                var ppLbClose = document.getElementById('projectLightboxClose');
+                                if (ppLbClose) ppLbClose.addEventListener('click', ppCloseLb);
+                                if (ppLightbox) ppLightbox.addEventListener('click', function(e) { if (e.target === ppLightbox) ppCloseLb(); });
+                                var ppLbPrev = document.getElementById('projectLightboxPrev');
+                                var ppLbNext = document.getElementById('projectLightboxNext');
+                                if (ppLbPrev) ppLbPrev.addEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    currentIdx = (currentIdx - 1 + galleryImages.length) % galleryImages.length;
+                                    ppUpdateLb();
+                                });
+                                if (ppLbNext) ppLbNext.addEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    currentIdx = (currentIdx + 1) % galleryImages.length;
+                                    ppUpdateLb();
+                                });
+                                document.addEventListener('keydown', function(e) {
+                                    if (!ppLightbox || !ppLightbox.classList.contains('active')) return;
+                                    if (e.key === 'Escape') ppCloseLb();
+                                    if (e.key === 'ArrowLeft') { currentIdx = (currentIdx - 1 + galleryImages.length) % galleryImages.length; ppUpdateLb(); }
+                                    if (e.key === 'ArrowRight') { currentIdx = (currentIdx + 1) % galleryImages.length; ppUpdateLb(); }
+                                });
+                            }
+
+                            document.querySelectorAll('.anim-reveal').forEach(function(el) {
+                                observer.observe(el);
+                            });
+
+                            var lw = document.getElementById('loaderWrapper');
+                            if (lw) setTimeout(function() { lw.classList.add('hidden'); }, 800);
+                        })
+                        .catch(function() {
+                            document.body.innerHTML = '<p style="color:#fff;text-align:center;margin-top:100px;font-family:sans-serif;">Failed to load project.</p>';
+                        });
+                }
             }
 
         })();

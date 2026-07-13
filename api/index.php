@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $contactEmail = $contact['email'];
                 $replyHtml = '<html><body style="font-family:\'Segoe UI\',Arial,sans-serif;color:#1a1a1a;max-width:600px;margin:0 auto;padding:20px;">';
                 $replyHtml .= '<div style="background:#000;padding:30px;border-radius:16px 16px 0 0;text-align:center;">';
-                $replyHtml .= '<img src="https://deep-design.netlify.app/assets/imgs/logo/white-deep.png" alt="Deep Design" style="height:40px;margin-bottom:8px;">';
+                $replyHtml .= '<img src="https://deep-design.netlify.app/assets/imgs/logo/white-deep.png" alt="Deep Design Hubs" style="height:40px;margin-bottom:8px;">';
                 $replyHtml .= '<p style="color:#888;font-size:12px;margin:0;letter-spacing:1px;text-transform:uppercase;">Reply to Your Message</p>';
                 $replyHtml .= '</div>';
                 $replyHtml .= '<div style="border:1px solid #e5e5e5;border-top:none;padding:32px;border-radius:0 0 16px 16px;">';
@@ -42,14 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $replyHtml .= '<p style="margin:0;font-size:13px;color:#666;">' . htmlspecialchars($contact['message']) . '</p>';
                 $replyHtml .= '</div>';
                 $replyHtml .= '<div style="margin:24px 0;padding:20px;background:#f0f0f0;border-radius:10px;">';
-                $replyHtml .= '<p style="margin:0 0 6px;color:#999;font-size:11px;text-transform:uppercase;font-weight:600;">Reply from Deep Design</p>';
+                $replyHtml .= '<p style="margin:0 0 6px;color:#999;font-size:11px;text-transform:uppercase;font-weight:600;">Reply from Deep Design Hubs</p>';
                 $replyHtml .= '<p style="margin:0;font-size:15px;line-height:1.7;white-space:pre-wrap;">' . nl2br(htmlspecialchars($replyMsg)) . '</p>';
                 $replyHtml .= '</div>';
-                $replyHtml .= '<p style="font-size:15px;line-height:1.7;margin-top:24px;">Best regards,<br><strong>Deep Design</strong></p>';
+                $replyHtml .= '<p style="font-size:15px;line-height:1.7;margin-top:24px;">Best regards,<br><strong>Deep Design Hubs</strong></p>';
                 $replyHtml .= '</div>';
                 $replyHtml .= '<p style="text-align:center;color:#bbb;font-size:11px;margin-top:20px;">deep-design.netlify.app</p>';
                 $replyHtml .= '</body></html>';
-                $sent = sendSMTP($contactEmail, 'Re: Your inquiry at Deep Design', $replyHtml);
+                $sent = sendSMTP($contactEmail, 'Re: Your inquiry at Deep Design Hubs', $replyHtml);
                 // Mark as read
                 $db->prepare("UPDATE contacts SET is_read = 1 WHERE id = ?")->execute([$replyId]);
                 $msg = $sent ? 'Reply sent to ' . $contactEmail : 'Failed to send reply.'; $msgType = $sent ? 'success' : 'error';
@@ -339,7 +339,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'gallery_label' => 'Behind the Work',
                     'gallery_heading' => 'A Glimpse <span class="highlight">Into My World</span>',
                     'philosophy_quote' => "I don't just build websites or design graphics \u2014 I craft experiences. Every pixel, every line of code, every color choice is intentional. My goal is to make digital products that people remember and love to use.",
-                    'philosophy_author' => 'Deep Design',
+                    'philosophy_author' => 'Deep Design Hubs',
                     'philosophy_role' => 'Developer & Designer',
                     'cta_heading' => 'Have a project in mind?',
                     'cta_text' => "I'm always open to new opportunities and creative collaborations.",
@@ -407,13 +407,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         if ($action === 'add_portfolio') {
-            $db->prepare("INSERT INTO portfolio (title, description, image, category, tags, project_url, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)")
-               ->execute([trim($_POST['title']), trim($_POST['description']), trim($_POST['image']), trim($_POST['category']), trim($_POST['tags']), trim($_POST['project_url']), (int)($_POST['sort_order']??0)]);
+            $slug = trim($_POST['slug'] ?? '');
+            if (empty($slug)) $slug = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', trim($_POST['title'])), '-'));
+            $db->prepare("INSERT INTO portfolio (title, slug, description, image, category, tags, project_url, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+               ->execute([trim($_POST['title']), $slug, trim($_POST['description']), trim($_POST['image']), trim($_POST['category']), trim($_POST['tags']), trim($_POST['project_url']), (int)($_POST['sort_order']??0)]);
             $msg = 'Project added.'; $msgType = 'success';
         }
         if ($action === 'update_portfolio') {
-            $db->prepare("UPDATE portfolio SET title=?, description=?, image=?, category=?, tags=?, project_url=?, sort_order=?, is_visible=? WHERE id=?")
-               ->execute([trim($_POST['title']), trim($_POST['description']), trim($_POST['image']), trim($_POST['category']), trim($_POST['tags']), trim($_POST['project_url']), (int)$_POST['sort_order'], isset($_POST['is_visible'])?1:0, (int)$_POST['id']]);
+            $slug = trim($_POST['slug'] ?? '');
+            if (empty($slug)) $slug = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', trim($_POST['title'])), '-'));
+            $db->prepare("UPDATE portfolio SET title=?, slug=?, description=?, image=?, category=?, tags=?, project_url=?, sort_order=?, is_visible=? WHERE id=?")
+               ->execute([trim($_POST['title']), $slug, trim($_POST['description']), trim($_POST['image']), trim($_POST['category']), trim($_POST['tags']), trim($_POST['project_url']), (int)$_POST['sort_order'], isset($_POST['is_visible'])?1:0, (int)$_POST['id']]);
             $msg = 'Project updated.'; $msgType = 'success';
         }
         if ($action === 'delete_portfolio') {
@@ -504,7 +508,10 @@ if (isset($_GET['logout'])) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deep Design — Admin Panel</title>
+<title>Deep Design Hubs — Admin Panel</title>
+<link rel="icon" type="image/png" href="https://deep-design.netlify.app/assets/imgs/logo/favicon.png">
+<link rel="shortcut icon" href="https://deep-design.netlify.app/assets/imgs/logo/favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://deep-design.netlify.app/assets/imgs/logo/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -660,7 +667,7 @@ select.form-input option{background:#111;color:#fff}
 <header class="admin-header">
     <div class="logo">
         <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-        Deep Design <span>Admin</span>
+        Deep Design Hubs <span>Admin</span>
     </div>
     <div class="header-search">
         <input type="text" placeholder="Search..." id="globalSearch" onkeyup="handleSearch(this.value)">
@@ -756,7 +763,14 @@ select.form-input option{background:#111;color:#fff}
                     <input type="hidden" name="id" id="pfId">
                     <div class="form-group">
                         <label>Title</label>
-                        <input type="text" name="title" id="pfTitle" class="form-input" placeholder="Project title" required>
+                        <input type="text" name="title" id="pfTitle" class="form-input" placeholder="Project title" required oninput="autoSlug()">
+                    </div>
+                    <div class="form-group">
+                        <label>URL Slug <span style="color:#555;font-weight:400;text-transform:none;letter-spacing:0">(auto-generated, editable)</span></label>
+                        <div style="display:flex;align-items:center;gap:0">
+                            <span style="padding:9px 10px;background:#1a1a1a;border:1px solid #333;border-right:none;border-radius:6px 0 0 6px;font-size:13px;color:#555;white-space:nowrap">/portfolio/</span>
+                            <input type="text" name="slug" id="pfSlug" class="form-input" placeholder="project-url-slug" style="border-radius:0 6px 6px 0">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Description</label>
@@ -790,7 +804,7 @@ select.form-input option{background:#111;color:#fff}
                         <input type="text" name="tags" id="pfTags" class="form-input" placeholder="React, Node.js, Stripe">
                     </div>
                     <div class="form-group">
-                        <label>Project URL</label>
+                        <label>External URL <span style="color:#555;font-weight:400;text-transform:none;letter-spacing:0">(optional live demo link)</span></label>
                         <input type="url" name="project_url" id="pfUrl" class="form-input" placeholder="https://example.com">
                     </div>
                     <div class="form-group" id="pfVisibleGroup" style="display:none">
@@ -888,7 +902,7 @@ select.form-input option{background:#111;color:#fff}
             <div class="btn-group">
                 <?php if(!$r['is_read']): ?><form method="POST" style="display:inline"><input type="hidden" name="action" value="mark_read"><input type="hidden" name="id" value="<?= $r['id'] ?>"><button class="btn btn-success btn-sm">Mark Read</button></form><?php endif; ?>
                 <form method="POST" style="display:inline" onsubmit="return confirm('Delete?')"><input type="hidden" name="action" value="delete_contact"><input type="hidden" name="id" value="<?= $r['id'] ?>"><button class="btn btn-danger btn-sm">Delete</button></form>
-                <a href="mailto:<?= htmlspecialchars($r['email']) ?>?subject=Re: Your inquiry at Deep Design" class="btn btn-ghost btn-sm">Open in Mail</a>
+                <a href="mailto:<?= htmlspecialchars($r['email']) ?>?subject=Re: Your inquiry at Deep Design Hubs" class="btn btn-ghost btn-sm">Open in Mail</a>
             </div>
             <div class="reply-box" style="margin-top:14px;border-top:1px solid #222;padding-top:14px;">
                 <form method="POST">
@@ -1058,7 +1072,7 @@ select.form-input option{background:#111;color:#fff}
 
             <div class="card"><div class="card-header"><h2>SEO / Meta Tags</h2><p style="color:#666;margin-top:4px;font-size:13px">Controls how this page appears in Google search and social media previews</p></div>
                 <?php $meta = $c['meta'] ?? []; ?>
-                <div class="form-group"><label>Page Title (shown in browser tab & Google)</label><input type="text" name="meta_title" class="form-input" value="<?= htmlspecialchars($meta['title']??'') ?>" placeholder="Page Name \u2014 Deep Design"></div>
+                <div class="form-group"><label>Page Title (shown in browser tab & Google)</label><input type="text" name="meta_title" class="form-input" value="<?= htmlspecialchars($meta['title']??'') ?>" placeholder="Page Name \u2014 Deep Design Hubs"></div>
                 <div class="form-group"><label>Meta Description (shown in Google results, 150-160 chars ideal)</label><textarea name="meta_description" class="form-input" rows="2" placeholder="Describe this page for search engines..."><?= htmlspecialchars($meta['description']??'') ?></textarea></div>
                 <div class="form-group"><label>Keywords (comma separated)</label><input type="text" name="meta_keywords" class="form-input" value="<?= htmlspecialchars($meta['keywords']??'') ?>" placeholder="keyword1, keyword2, keyword3"></div>
                 <div class="form-row">
@@ -1219,6 +1233,11 @@ function editGallery(img){
 }
 
 /* ===== PORTFOLIO MODAL ===== */
+function autoSlug(){
+    var t=document.getElementById('pfTitle').value;
+    var s=t.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    document.getElementById('pfSlug').value=s;
+}
 function openPortfolioModal(data){
     var m=document.getElementById('portfolioModal');
     var f=document.getElementById('portfolioForm');
@@ -1238,6 +1257,7 @@ function editPortfolio(p){
     document.getElementById('portfolioAction').value='update_portfolio';
     document.getElementById('pfId').value=p.id;
     document.getElementById('pfTitle').value=p.title||'';
+    document.getElementById('pfSlug').value=p.slug||'';
     document.getElementById('pfDesc').value=p.description||'';
     document.getElementById('pfImage').value=p.image||'';
     document.getElementById('pfCategory').value=p.category||'web';
@@ -1279,8 +1299,32 @@ function uploadGalleryEditImage(input){
 }
 
 /* ===== SEARCH ===== */
+var searchTimer;
 function handleSearch(q){
-    // Future: filter visible content
+    clearTimeout(searchTimer);
+    searchTimer=setTimeout(function(){
+        q=q.toLowerCase().trim();
+        // Search portfolio items
+        document.querySelectorAll('.portfolio-item').forEach(function(el){
+            var text=el.textContent.toLowerCase();
+            el.style.display=(!q||text.indexOf(q)!==-1)?'':'none';
+        });
+        // Search gallery items
+        document.querySelectorAll('.gallery-item').forEach(function(el){
+            var text=el.textContent.toLowerCase();
+            el.style.display=(!q||text.indexOf(q)!==-1)?'':'none';
+        });
+        // Search contact messages
+        document.querySelectorAll('.msg-view').forEach(function(el){
+            var text=el.textContent.toLowerCase();
+            el.style.display=(!q||text.indexOf(q)!==-1)?'':'none';
+        });
+        // Search table rows (subscribers, dashboard recent contacts)
+        document.querySelectorAll('table tbody tr').forEach(function(el){
+            var text=el.textContent.toLowerCase();
+            el.style.display=(!q||text.indexOf(q)!==-1)?'':'none';
+        });
+    },200);
 }
 </script>
 </body>
